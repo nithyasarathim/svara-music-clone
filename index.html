@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Svara - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container" style="text-align: center; width: 500px; background-color: white;">
+        <div class="logo">
+            <img src="svara.jpg" alt="Svara Logo">
+            <h1>Svara</h1>
+            <p>Experience the Essence of Music</p>
+        </div>
+
+        <div class="form-box">
+            <h2 style="color: black;">Login to Svara</h2>
+            <form onsubmit="login(event)">
+                <div class="input-group">
+                    <input type="email" id="loginEmail" placeholder="Enter your Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="loginPassword" placeholder="Enter Password" required>
+                </div>
+                <button type="submit" class="btn">Log In</button>
+                <p class="switch">New to Svara? <a href="signup.html">Sign Up</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

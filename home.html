@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Svara - Modern Music App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1DB954;
+            --secondary: #191414;
+            --dark: #000000;
+            --light: #FFFFFF;
+            --accent: #1ED760;
+            --text: #B3B3B3;
+        }
+        html{
+            scroll-behavior: smooth;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+        
+        .app-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 4fr;
+            gap: 2rem;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo i {
+            color: var(--accent);
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text);
+            text-decoration: none;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .search-bar {
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: none;
+            border-radius: 30px;
+            background: white;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text);
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom:;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .view-all {
+            color: var(--primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .song-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .song-card {
+            background: var(--light);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .song-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .song-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+        
+        .song-info {
+            padding: 1rem;
+        }
+        
+        .song-title {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .song-artist {
+            font-size: 0.8rem;
+            color: var(--text);
+        }
+        
+        .song-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.8rem;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn:hover {
+            color: var(--primary);
+        }
+        
+        .action-btn.favorite {
+            color: var(--accent);
+        }
+        
+        .player-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            z-index: 100;
+        }
+        
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 200px;
+        }
+        
+        .player-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .player-text .song-title {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        
+        .player-text .song-artist {
+            font-size: 0.8rem;
+            color: var(--text);
+        }
+        
+        .player-controls {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background: #dfe6e9;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 5px;
+            width: 0%;
+        }
+        
+        .time-info {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text);
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .control-btn:hover {
+            color: var(--primary);
+        }
+        
+        .play-btn {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .player-extra {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .lyrics-container {
+            position: fixed;
+            bottom: 90px;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 99;
+        }
+        
+        .lyrics-container.show {
+            transform: translateY(0);
+        }
+        
+        .lyrics-title {
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .close-lyrics {
+            cursor: pointer;
+        }
+        
+        .lyrics-content {
+            white-space: pre-line;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .song-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .player-container {
+                padding: 1rem;
+            }
+            
+            .player-info {
+                min-width: auto;
+            }
+            
+            .player-extra {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-music"></i>
+                <span>Svara</span>
+            </div>
+            <a href="#home" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#favorites-section" class="nav-item">
+                <i class="fas fa-heart"></i>
+                <span>Favorites</span>
+            </a>
+            <a href="#playlist-section" class="nav-item">
+                <i class="fas fa-list"></i>
+                <span>Playlists</span>
+            </a>
+        </div>
+        
+        <div class="main-content">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search" placeholder="Search for songs, artists or albums..." onkeyup="searchSongs()">
+            </div>
+            
+            <div class="section" id="home">
+                <div class="section-header">
+                    <h2 class="section-title">Your Personalized Playlist</h2>
+                    <span class="view-all">View All</span>
+                </div>
+                <div id="song-list" class="song-grid">
+                </div>
+            </div>
+            
+            <div class="section" id="playlist-section">
+                <div class="section-header">
+                    <h2 class="section-title">Your Playlist</h2>
+                    <span class="view-all">View All</span>
+                </div>
+                <div id="playlist-list" class="song-grid">
+                </div>
+            </div>
+            
+            <div class="section" id="favorites-section" style="margin-bottom:300px ;">
+                <div class="section-header">
+                    <h2 class="section-title">Favorites</h2>
+                    <span class="view-all">View All</span>
+                </div>
+                <div id="favorites-list" class="song-grid">
+                </div>
+            </div>
+        </div>
+        
+        <div class="player-container">
+            <div class="player-info">
+                <img id="player-image" src="https://via.placeholder.com/50" alt="Song" class="player-image">
+                <div class="player-text">
+                    <div id="player-title" class="song-title">Not Playing</div>
+                    <div id="player-artist" class="song-artist">Select a song</div>
+                </div>
+            </div>
+            
+            <div class="player-controls">
+                <div class="control-buttons">
+                    <button class="control-btn"><i class="fas fa-random"></i></button>
+                    <button class="control-btn"><i class="fas fa-step-backward"></i></button>
+                    <button class="control-btn play-btn"><i class="fas fa-play"></i></button>
+                    <button class="control-btn"><i class="fas fa-step-forward"></i></button>
+                    <button class="control-btn"><i class="fas fa-redo"></i></button>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="time-info">
+                    <span id="current-time">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+            
+            <div class="player-extra">
+                <button class="control-btn" id="lyrics-btn"><i class="fas fa-align-left"></i></button>
+                <button class="control-btn"><i class="fas fa-volume-up"></i></button>
+            </div>
+        </div>
+        
+        <div class="lyrics-container" id="lyrics-box">
+            <div class="lyrics-title">
+                <span>Lyrics</span>
+                <span class="close-lyrics" onclick="toggleLyrics()"><i class="fas fa-times"></i></span>
+            </div>
+            <div id="lyrics" class="lyrics-content">Select a song to view lyrics</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let selectedArtists = JSON.parse(localStorage.getItem("selectedArtists")) || [];
+            let userPlaylist = JSON.parse(localStorage.getItem("userPlaylist")) || [];
+            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+            let songs = {
+                "AR Rahman": [
+                    { title: "New York Nagaram", artist: "AR Rahman", src: "songs/new_york_nagaram.mp3", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlEOa4rH7_xdLk5ygGQIp6Y8rc_4v3U_60Rg&s", lyrics: "new york nagaram urangum neram...." },
+                    { title: "Enna Sona", artist: "AR Rahman", src: "songs/enna_sona.mp3", image: "https://i1.sndcdn.com/artworks-000228148137-flzm20-t500x500.jpg", lyrics: "Enna sona, kyun rab ne banaya..." },
+                    { title: "Roja", artist: "AR Rahman", src: "songs/kadhal_roja.mp3", image: "https://meragana.com/GetPoster.aspx?ab=Roja+(1992)+-+(Hindi+Film)", lyrics: "Kadhal Rojave..." },
+                    { title: "Munbe Vaa", artist: "AR Rahman", src: "songs/munbe_vaa.mp3", image: "https://i.scdn.co/image/ab67616d0000b273ff3e3dcc8b72e3315b7a04d9", lyrics: "Munbe vaa en anbe vaa..." },
+                    { title: "Avalum Naanum", artist: "AR Rahman", src: "songs/avalum_naanum_arrah.mp3", image: "https://i1.sndcdn.com/artworks-000186026257-yhu8h8-t500x500.jpg", lyrics: "Avalum Naanum Amuthum Tamilum..." }
+                ],
+                "Anirudh Ravichander": [
+                    { title: "Why This Kolaveri Di", artist: "Anirudh Ravichander", src: "songs/why_this_kolaveri_di.mp3", image: "https://upload.wikimedia.org/wikipedia/en/thumb/d/db/Whu_this_kolaveri_di.JPG/250px-Whu_this_kolaveri_di.JPG", lyrics: "Why This Kolaveri Di..." },
+                    { title: "Vaathi Coming", artist: "Anirudh Ravichander", src: "songs/vaathi_coming_master.mp3", image: "https://upload.wikimedia.org/wikipedia/en/1/1c/Vaathi_Coming.jpg", lyrics: "Lyrics Not Found" },
+                    { title: "Arabic Kuthu", artist: "Anirudh Ravichander", src: "songs/arabic_kuthu.mp3", image: "https://upload.wikimedia.org/wikipedia/en/2/2a/Arabic_Kuthu.jpg", lyrics: "Halamithi habibo..." },
+                    { title: "So Baby", artist: "Anirudh Ravichander", src: "songs/doctor_so_baby.mp3", image: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/86cd70ca-b363-42f6-86aa-03c910c58eb5/detrfby-bf5b523b-6983-4ec4-b4a1-f6f46fd78213.jpg/v1/fill/w_1280,h_1911,q_75,strp/so_baby_full_video_song_hd_plain_by_harheetsingh3371_detrfby-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTkxMSIsInBhdGgiOiJcL2ZcLzg2Y2Q3MGNhLWIzNjMtNDJmNi04NmFhLTAzYzkxMGM1OGViNVwvZGV0cmZieS1iZjViNTIzYi02OTgzLTRlYzQtYjRhMS1mNmY0NmZkNzgyMTMuanBnIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.-FUK1udkm54KBk3qRDHnffu3RSs5YKsDrKbl1cGUnl0", lyrics: "Lyrics Not Found" },
+                    { title: "Dippam Dappam", artist: "Anirudh Ravichander", src: "songs/dippam_dappam_tune.mp3", image: "https://c.saavncdn.com/403/Kaathuvaakula-Rendu-Kaadhal-Original-Motion-Picture-Soundtrack-Tamil-2022-20220428131043-500x500.jpg", lyrics: "Dippam dappam..." }
+                ],
+                "Yuvan Shankar Raja": [
+                    { title: "Loosu Penne", artist: "Yuvan Shankar Raja", src: "songs/loosu_penne.mp3", image: "https://c.saavncdn.com/426/Vallavan-Tamil-2006-20230712130650-500x500.jpg", lyrics: "Loosu penne loosu penne..." },
+                    { title: "En Kaadhal Solla", artist: "Yuvan Shankar Raja", src: "songs/en_kaadhal_solla.mp3", image: "https://c.saavncdn.com/984/Paiya-Tamil-2010-20200620134043-500x500.jpg", lyrics: "Un Azhagaale un azhaagle..." },
+                    { title: "Oru Kal Oru Kannadi", artist: "Yuvan Shankar Raja", src: "songs/oru_kal_oru_kannadi.mp3", image: "https://c-fa.cdn.smule.com/rs-s26/arr/97/30/2405df7f-41b7-48a3-9339-2fa5c3003b23.jpg", lyrics: "Oru Kal.. Oru Kannadi... Udaiyaamal Modhi kondaal kaadhal.." },
+                    { title: "Idhu Varai", artist: "Yuvan Shankar Raja", src: "songs/idhu_varai.mp3", image: "https://i.scdn.co/image/ab67616d0000b273729ad68875f57912947255d5", lyrics: "Idhu varai illadha uravu..." },
+                    { title: "Ven Megam", artist: "Yuvan Shankar Raja", src: "songs/en_kadal.mp3", image: "https://c-fa.cdn.smule.com/rs-s80/arr/46/cb/73d7eca9-6dda-4eee-8ca9-1f7278a81675.jpg", lyrics: "En Kaadhalum ennagumo" }
+                ],
+                "GV Prakash": [
+                    { title: "Uyirey", artist: "GV Prakash", src: "songs/uyirey_from_amaran.mp3", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcR02HAQGBQcQsX_CBLLr-_qtIKl6mMWuDNLfit0xC52saLPIrSsk1nWxGOmWtB8mw4mA&usqp=CAU", lyrics: "Uyirey..Uyirey..." },
+                    { title: "Pookal Pookum", artist: "GV Prakash", src: "songs/pookal_pookum_mix.mp3", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsqmxDF68oqyTIFbGA0IVSvcoLj5XQo10nEg&s", lyrics: "Paadhai mudindha piragum..." },
+                    { title: "Akkam Pakkam", artist: "GV Prakash", src: "songs/akkam_pakkam.mp3", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvOh0A9GdOrSO0fD81hvAykqWchZ5bmGM1EQ&s", lyrics: "Akkam pakkam yaarum illaa.." },
+                    { title: "En jeevan", artist: "GV Prakash", src: "songs/en_jeevan.mp3", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRgC4DlPuilHofNZFB-xV_TUCUymd1bAQ3vQ&s", lyrics: "Unnale ennalum..en jeevan vaazhudhe..." },
+                    { title: "Pirai Thedum", artist: "GV Prakash", src: "songs/pirai_thedum.mp3", image: "https://i1.sndcdn.com/artworks-000019257750-rysmpo-t500x500.jpg", lyrics: "Pirai thedum..." }
+                ]
+            };
+
+            let audioPlayer = new Audio();
+            let currentSong = null;
+            let isPlaying = false;
+            let playBtn = document.querySelector('.play-btn i');
+            let playerImage = document.getElementById('player-image');
+            let playerTitle = document.getElementById('player-title');
+            let playerArtist = document.getElementById('player-artist');
+            let progressBar = document.querySelector('.progress-bar');
+            let currentTimeEl = document.getElementById('current-time');
+            let durationEl = document.getElementById('duration');
+            let lyricsBtn = document.getElementById('lyrics-btn');
+            let lyricsBox = document.getElementById('lyrics-box');
+            let lyricsContent = document.getElementById('lyrics');
+
+            function init() {
+                renderSongs();
+                renderPlaylist();
+                renderFavorites();
+                setupEventListeners();
+            }
+
+            function renderSongs() {
+                let songListDiv = document.getElementById('song-list');
+                songListDiv.innerHTML = '';
+                
+                selectedArtists.forEach(artist => {
+                    if (songs[artist]) {
+                        songs[artist].forEach(song => {
+                            createSongElement(song, songListDiv);
+                        });
+                    }
+                });
+            }
+
+            function renderPlaylist() {
+                let playlistDiv = document.getElementById('playlist-list');
+                playlistDiv.innerHTML = '';
+                
+                userPlaylist.forEach(song => {
+                    createSongElement(song, playlistDiv, true);
+                });
+            }
+
+            function renderFavorites() {
+                let favoritesDiv = document.getElementById('favorites-list');
+                favoritesDiv.innerHTML = '';
+                
+                favorites.forEach(song => {
+                    createSongElement(song, favoritesDiv, false, true);
+                });
+            }
+
+            function createSongElement(song, parentDiv, isPlaylist = false, isFavorite = false) {
+                let songCard = document.createElement('div');
+                songCard.className = 'song-card';
+                songCard.innerHTML = `
+                    <img src="${song.image}" alt="${song.title}" class="song-image">
+                    <div class="song-info">
+                        <div class="song-title">${song.title}</div>
+                        <div class="song-artist">${song.artist}</div>
+                        <div class="song-actions">
+                            <button class="action-btn ${isFavorite ? 'favorite' : ''}" onclick="toggleFavorite(event, ${JSON.stringify(song).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="action-btn" onclick="${isPlaylist ? `removeFromPlaylist(${JSON.stringify(song).replace(/"/g, '&quot;')})` : `addToPlaylist(${JSON.stringify(song).replace(/"/g, '&quot;')})`}">
+                                <i class="fas ${isPlaylist ? 'fa-trash' : 'fa-plus'}"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                songCard.querySelector('.song-image').addEventListener('click', () => playSong(song));
+                parentDiv.appendChild(songCard);
+            }
+
+            function playSong(song) {
+                currentSong = song;
+                audioPlayer.src = song.src;
+                audioPlayer.play();
+                isPlaying = true;
+                playBtn.className = 'fas fa-pause';
+                
+                playerImage.src = song.image;
+                playerTitle.textContent = song.title;
+                playerArtist.textContent = song.artist;
+                lyricsContent.textContent = song.lyrics;
+                
+                highlightPlayingSong(song);
+            }
+
+            function togglePlay() {
+                if (currentSong) {
+                    if (isPlaying) {
+                        audioPlayer.pause();
+                        playBtn.className = 'fas fa-play';
+                    } else {
+                        audioPlayer.play();
+                        playBtn.className = 'fas fa-pause';
+                    }
+                    isPlaying = !isPlaying;
+                }
+            }
+
+            function toggleFavorite(event, song) {
+                event.stopPropagation();
+                let btn = event.currentTarget;
+                
+                let index = favorites.findIndex(s => s.title === song.title);
+                if (index === -1) {
+                    favorites.push(song);
+                    btn.classList.add('favorite');
+                } else {
+                    favorites.splice(index, 1);
+                    btn.classList.remove('favorite');
+                }
+                
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                renderFavorites();
+            }
+
+            function addToPlaylist(song) {
+                if (!userPlaylist.some(s => s.title === song.title)) {
+                    userPlaylist.push(song);
+                    localStorage.setItem('userPlaylist', JSON.stringify(userPlaylist));
+                    renderPlaylist();
+                }
+            }
+
+            function removeFromPlaylist(song) {
+                userPlaylist = userPlaylist.filter(s => s.title !== song.title);
+                localStorage.setItem('userPlaylist', JSON.stringify(userPlaylist));
+                renderPlaylist();
+            }
+
+            function searchSongs() {
+                let query = document.getElementById('search').value.toLowerCase();
+                let songCards = document.querySelectorAll('.song-card');
+                
+                songCards.forEach(card => {
+                    let title = card.querySelector('.song-title').textContent.toLowerCase();
+                    let artist = card.querySelector('.song-artist').textContent.toLowerCase();
+                    card.style.display = (title.includes(query) || artist.includes(query)) ? 'block' : 'none';
+                });
+            }
+
+            function toggleLyrics() {
+                lyricsBox.classList.toggle('show');
+            }
+
+            function highlightPlayingSong(song) {
+                document.querySelectorAll('.song-card').forEach(card => {
+                    card.style.border = 'none';
+                    if (card.querySelector('.song-title').textContent === song.title) {
+                        card.style.border = '2px solid var(--primary)';
+                    }
+                });
+            }
+
+            function setupEventListeners() {
+                document.querySelector('.play-btn').addEventListener('click', togglePlay);
+                
+                audioPlayer.addEventListener('timeupdate', updateProgress);
+                audioPlayer.addEventListener('ended', nextSong);
+                audioPlayer.addEventListener('loadedmetadata', () => {
+                    durationEl.textContent = formatTime(audioPlayer.duration);
+                });
+                
+                document.querySelector('.progress-container').addEventListener('click', setProgress);
+                
+                lyricsBtn.addEventListener('click', toggleLyrics);
+            }
+
+            function updateProgress() {
+                const { currentTime, duration } = audioPlayer;
+                const progressPercent = (currentTime / duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                currentTimeEl.textContent = formatTime(currentTime);
+            }
+
+            function setProgress(e) {
+                const width = this.clientWidth;
+                const clickX = e.offsetX;
+                const duration = audioPlayer.duration;
+                audioPlayer.currentTime = (clickX / width) * duration;
+            }
+
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+
+            function nextSong() {
+                console.log('Song ended, play next song');
+            }
+            init();
+            window.toggleLyrics = toggleLyrics;
+            window.searchSongs = searchSongs;
+            window.toggleFavorite = toggleFavorite;
+            window.addToPlaylist = addToPlaylist;
+            window.removeFromPlaylist = removeFromPlaylist;
+        });
+    </script>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Svara - Choose Your Favorite Artists</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1DB954;
+            --secondary: #191414;
+            --dark: #000000;
+            --light: #FFFFFF;
+            --accent: #1ED760;
+            --text: #B3B3B3;
+            --card-bg: #f8f9fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .dashboard-container {
+            max-width: 1000px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        p {
+            color: var(--text);
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .artist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .artist {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .artist:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .artist.selected {
+            border: 3px solid var(--primary);
+            background-color: rgba(29, 185, 84, 0.1);
+        }
+        
+        .artist.selected::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .artist img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .artist.selected img {
+            border-color: var(--primary);
+        }
+        
+        .artist p {
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        #continue-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+        }
+        
+        #continue-btn:disabled {
+            background: var(--text);
+            cursor: not-allowed;
+            opacity: 0.7;
+            box-shadow: none;
+        }
+        
+        #continue-btn:not(:disabled):hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 215, 96, 0.4);
+        }
+        
+        .selection-counter {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .artist-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1rem;
+            }
+            
+            .artist img {
+                width: 100px;
+                height: 100px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Pick 5 Artists You Love</h1>
+        <p>Select your top 5 favorite artists to personalize your experience</p>
+        <div class="selection-counter" id="selection-counter">0/5 selected</div>
+        
+        <div class="artist-grid">
+            <div class="artist" onclick="selectArtist(this, 'AR Rahman')">
+                <img src="https://songsall.com/wp-content/uploads/2024/08/Untitled-design-6.png" alt="AR Rahman">
+                <p>AR Rahman</p>
+            </div>
+            <div class="artist" onclick="selectArtist(this, 'Anirudh Ravichander')">
+                <img src="https://www.radioandmusic.com/sites/www.radioandmusic.com/files/images/entertainment/2020/06/17/sl.jpg" alt="Anirudh Ravichander">
+                <p>Anirudh Ravichander</p>
+            </div>
+            <div class="artist" onclick="selectArtist(this, 'GV Prakash')">
+                <img src="https://i.scdn.co/image/ab6761610000e5eb0a5c692089af5c0f9cf839f3" alt="GV Prakash">
+                <p>GV Prakash</p>
+            </div>
+            <div class="artist" onclick="selectArtist(this, 'Hiphop Tamizha')">
+                <img src="https://www.behindwoods.com/tamil-movies-cinema-news-16/images/hiphop-tamizha-adhi-begins-his-next-film-photos-pictures-stills.jpg" alt="Hiphop Tamizha">
+                <p>Hiphop Tamizha</p>
+            </div>
+            <div class="artist" onclick="selectArtist(this, 'Yuvan Shankar Raja')">
+                <img src="https://dazfv12o5xaqc.cloudfront.net/images/profiles/86ea0f68f4f649d996f7b3871c6e04af.jpg" alt="Yuvan Shankar Raja">
+                <p>Yuvan Shankar Raja</p>
+            </div>
+            <div class="artist" onclick="selectArtist(this, 'Shakthishree Gopalan')">
+                <img src="https://i.scdn.co/image/ab6761610000e5eba4aed358506f8ced29af53a5" alt="Shakthishree Gopalan">
+                <p>Shakthishree Gopalan</p>
+            </div>
+            <div class="artist" onclick="selectArtist(this, 'Jonita Gandhi')">
+                <img src="https://www.filmfare.com/awards/filmfare-awards-2019/images/nominations/jonita-gandhi.jpg" alt="Jonita Gandhi">
+                <p>Jonita Gandhi</p>
+            </div>
+            <div class="artist" onclick="selectArtist(this, 'Chinmayi Sripada')">
+                <img src="https://media.assettype.com/thenewsminute%2Fimport%2Fsites%2Fdefault%2Ffiles%2FChinmayi_PhotographerManojYD_281222_1200_(1).jpg" alt="Chinmayi Sripada">
+                <p>Chinmayi Sripada</p>
+            </div>
+            <div class="artist" onclick="selectArtist(this, 'Shreya Ghoshal')">
+                <img src="https://www.shreyaghoshal.com/assest/images/shreya-image.png" alt="Shreya Ghoshal">
+                <p>Shreya Ghoshal</p>
+            </div>
+            <div class="artist" onclick="selectArtist(this, 'Saindhavi')">
+                <img src="https://pbs.twimg.com/profile_images/1669954589544812544/WFit3Xea_400x400.jpg" alt="Saindhavi">
+                <p>Saindhavi</p>
+            </div>
+        </div>
+
+        <button id="continue-btn" disabled onclick="continueToHome()">Continue</button>
+    </div>
+
+    <script>
+        let selectedArtists = [];
+        const maxSelection = 5;
+        const continueBtn = document.getElementById('continue-btn');
+        const counter = document.getElementById('selection-counter');
+        
+        function selectArtist(element, artistName) {
+            const index = selectedArtists.indexOf(artistName);
+            
+            if (index === -1) {
+                if (selectedArtists.length < maxSelection) {
+                    selectedArtists.push(artistName);
+                    element.classList.add('selected');
+                }
+            } else {
+                selectedArtists.splice(index, 1);
+                element.classList.remove('selected');
+            }
+            
+            updateUI();
+        }
+        
+        function updateUI() {
+            counter.textContent = `${selectedArtists.length}/${maxSelection} selected`;
+            
+            if (selectedArtists.length === maxSelection) {
+                continueBtn.disabled = false;
+                counter.style.color = 'var(--primary)';
+            } else {
+                continueBtn.disabled = true;
+                counter.style.color = selectedArtists.length > 0 ? 'var(--primary)' : 'var(--text)';
+            }
+        }
+        
+        function continueToHome() {
+            localStorage.setItem('selectedArtists', JSON.stringify(selectedArtists));
+            window.location.href = 'home.html';
+        }
+    </script>
+</body>
+</html>
